@@ -1,0 +1,99 @@
+#!/usr/bin/perl
+
+#
+# Script: perl query.pl id_query
+#
+# Description:
+# Author: Yi Xiong
+# email: xiongyi128@gmail.com
+# Date: Dec.11.2013
+
+sub compute_distance {
+	my ( $dir, $id1, $id2 ) = @_;
+	$filename1 = "$dir/$id1.inv";
+	$filename2 = "$dir/$id2.inv";
+	open FILE1, $filename1 or die $!;
+	open FILE2, $filename2 or die $!;
+	my @lines1 = <FILE1>;
+	my @lines2 = <FILE2>;
+	close FILE2;
+	close FILE1;
+	chomp(@lines1);
+	chomp(@lines2);
+
+	my $sum = 0;
+
+	for (
+		my $descriptor_index = 1 ;
+		$descriptor_index <= $#lines1 ;
+		$descriptor_index++
+	  )
+	{
+		$sum += ( $lines1[$descriptor_index] - $lines2[$descriptor_index] )**2;
+	}
+
+	my $dist = sqrt($sum);
+
+	$dist;
+}
+
+$id_query      = $ARGV[0];
+$volume_filter = $ARGV[1];
+$inv_dir = $ARGV[2];
+
+my %volumehash;
+open( IN, "../db/volume.txt" );
+@inarray = <IN>;
+close(IN);
+chomp(@inarray);
+
+foreach $line (@inarray) {
+	my @tmparray = split( /\s+/, $line );
+	if ( $tmparray[1] > 0 ) {
+		$volumehash{ $tmparray[0] } = $tmparray[1];
+	}
+}
+
+opendir( DIR, $inv_dir );
+@filearray = grep( /\.inv$/, readdir(DIR) );
+closedir(DIR);
+
+my %iddisthash;
+foreach $filename (@filearray) {
+	$id_template = substr( $filename, 0, 4 );
+	if ( $id_query ne $id_template ) {
+		my $dist = compute_distance( $inv_dir, $id_query, $id_template );
+		$dist = sprintf "%.3f", $dist;
+		if ( $dist >= 0 ) {
+			$iddisthash{$id_template} = $dist;
+		}
+	}
+}
+
+if ( $volume_filter eq "-nofilter" ) {
+	my $num = 0;
+	foreach
+	  my $key ( sort { $iddisthash{$a} <=> $iddisthash{$b} } keys %iddisthash )
+	{
+		++$num;
+		if ( $num <= 20 ) {
+			print "$key\t$iddisthash{$key}\n";
+		}
+	}
+}
+elsif ( $volume_filter eq "-filter" ) {
+	my $num = 0;
+	foreach
+	  my $key ( sort { $iddisthash{$a} <=> $iddisthash{$b} } keys %iddisthash )
+	{
+		if ( exists $volumehash{$id_query} && exists $volumehash{$key} ) {
+			$ratio = $volumehash{$key} / $volumehash{$id_query};
+			if ( $ratio >= 0.8 && $ratio <= 1.2 ) {
+				++$num;
+				if ( $num <= 20 ) {
+					print "$key\t$iddisthash{$key}\n";
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,279 @@
+<?php
+include ('../header.php');
+?>
+
+<br>
+
+<?php
+
+$db_prog = 'query.pl';
+$img_dir = '../db/img';
+$db_dir = '../db';
+
+$search_upload = 0;
+$query_id = $_REQUEST['q'];
+$volume_filter = $_REQUEST['volumeFilter'];
+$representation = $_REQUEST['rep'];
+
+$inv_dir = '../db/2_contour/inv';
+if ($representation === "recommend") {
+	$inv_dir = '../db/recommend_contour/inv';
+}
+if ($representation === "recommendonethird") {
+	$inv_dir = '../db/1_contour/inv';
+}
+if ($representation === "recommendtwothird") {
+	$inv_dir = '../db/2_contour/inv';
+}
+if ($representation === "recommendonethirdtwothird") {
+	$inv_dir = '../db/1_2_contour/inv';
+}
+
+$query_pdb_file = $_FILES['pdbfile']['tmp_name'];
+if ($query_pdb_file) {
+	$search_upload = 1;
+	//get the actual name of the file
+	if (strrpos($_FILES['pdbfile']['name'], ".")) {
+		$query_pdb_id = substr($_FILES['pdbfile']['name'], 0, strrpos($_FILES['pdbfile']['name'], "."));
+	} else {
+		$query_pdb_id = substr($_FILES['pdbfile']['name'], 0);
+	}
+	//move to the pdb file    /tmp/phpU0F49q   tmp/phpU0F49q.map
+	$pdb_file = "tmp/" . substr($query_pdb_file, 5) . ".map";
+	$query = substr($query_pdb_file, 5);
+	move_uploaded_file($query_pdb_file, $pdb_file);
+} else {
+	$query = $query_pdb_id;
+}
+
+if ($volume_filter === "off") {
+	$volume_filtering_option = "-nofilter";
+} else {
+	$volume_filtering_option = "-filter";
+}
+
+$P2C_file = fopen("$db_dir/name.txt", "r");
+while (!feof($P2C_file)) {
+	$line = fgets($P2C_file);
+	#separate by a char
+	$tmparray = preg_split("/\t/", $line);
+	$namehash["$tmparray[0]"] = "$tmparray[1]";
+}
+fclose($P2C_file);
+
+$query_name = $namehash["$query_id"];
+
+$P2C_file = fopen("$db_dir/fullname.txt", "r");
+while (!feof($P2C_file)) {
+	$line = fgets($P2C_file);
+	#separate by a char
+	$tmparray = preg_split("/\t/", $line);
+	$fullnamehash["$tmparray[0]"] = "$tmparray[1]";
+}
+fclose($P2C_file);
+
+$query_fullname = $fullnamehash["$query_id"];
+
+$P2C_file = fopen("$db_dir/volume.txt", "r");
+while (!feof($P2C_file)) {
+	$line = fgets($P2C_file);
+	#separate by a char
+	$tmparray = preg_split("/\t/", $line);
+	$volumehash["$tmparray[0]"] = "$tmparray[1]";
+}
+fclose($P2C_file);
+
+$query_volume = $volumehash["$query_id"];
+
+// show the inv curve and values
+$zernike_length_end_pos;
+$zernike_descriptors;
+$zernike_count;
+
+$query_file = "$inv_dir/$query_id.inv";
+
+// ---- Check INV File ----
+$cat_inv = file_get_contents($query_file);
+
+// initialize the zernike descriptors variable that will be used at the end of the table
+$zernike_length_end_pos = strpos($cat_inv, "\n");
+$zernike_descriptors = substr($cat_inv, $zernike_length_end_pos);
+
+$zernike_count = 0;
+$descriptor;
+$chart_formatted_descriptors = "";
+$textarea_formatted_descriptors = "";
+
+$tmparray = preg_split("/\n/", $zernike_descriptors);
+for ($i = 0; $i < count($tmparray) - 1; ++ $i) {
+	$descriptor = $tmparray[$i];
+	if ($zernike_count > 0) {
+		$textarea_formatted_descriptors = "$textarea_formatted_descriptors($zernike_count) $descriptor \n";
+		$chart_formatted_descriptors = "$chart_formatted_descriptors$zernike_count,$descriptor;";
+	}
+	$zernike_count++;
+}
+
+// All error messages should be handled here. There will be a PHP IF clause
+// whose scope is the rest of the HTML code generated for visualization.
+// If any error case is found then just the error message should be displayed,
+// followed by the footer page.
+// Thus there will be one closing } at the very end of this php file
+// to close out this if-else error check
+include ('errortable.php');
+// Error #1: The EMDB ID provided does not exist overall
+if (!$search_upload && !file_exists($query_file) && $query_fullname == "")
+{
+	generate_error_table("Error: Entry not in current EMDB.", "The EMDB ID provided is not included in the current version of the database.");
+include ('../tailer.php');
+}
+// Error #2: The EMDB ID exists but there is some error in the generation of 3DZDs
+else if(!$search_upload && !file_exists($query_file))
+{
+	generate_error_table("Error: EMDB ID in process", "The EMDB ID provided is part of the current update but all necessary files are not generated yet.<br>" .
+							  "A fraction of EMDB entries present problems either because they require manual formatting to be used by our " .
+							  " programs or, in some cases, the data in EMDB servers is incomplete.");
+include ('../tailer.php');
+}
+else
+{
+?>
+
+
+<!-- surmarize the query -->
+<table width="768" align="center" border="1">
+	<tr>
+		<td colspan="4"><div align="left"><p class="text4">Query entry</p></div></td>
+	</tr>
+	<tr>
+		<td width="192">
+		<div align="left">
+		<b>
+		<a
+			href='http://www.ebi.ac.uk/pdbe/entry/EMD-<?php echo "$query_id" ?>'
+			target="_blank" title='<?php echo "EMD-$query_id" ?>'>
+			<?php echo "EMD-$query_id" ?>
+		</a>
+		</b>
+		<br>
+		<?php if ($query_fullname != $query_name) { ?>
+		<a title='<?php echo "$query_fullname" ?>'> 
+		<?php } ?>
+		<font color="black"><?php echo "$query_name" ?></font>
+		<?php if ($query_fullname != $query_name) { ?>
+		</a>
+		<?php } ?>
+		<br>
+		
+		<img alt='<?php echo "$query_id" ?>' width="180" border="0" src='<?php echo "$img_dir/$query_id.gif" ?>' />	
+		<br>
+		</div>
+		</td>
+		
+		<!-- create the applet that displays the zernike descriptors -->
+		<td colspan="2" width="384"><applet name="chart" code="JFreeChartApplet.class"
+				codebase="../jfreechart"
+				archive="jcommon-1.0.15.jar,jfreechart-1.0.12.jar" width="384">
+				<PARAM name="points"
+					value='<?php echo "$chart_formatted_descriptors"; ?>' />
+			</applet>
+		</td>
+			
+		<td width="192">
+		    <b>Descriptors</b>
+			<br>
+			<textarea align = "left" id="statusbarzernike" rows="11" readonly><?php echo "$textarea_formatted_descriptors"; ?>
+			</textarea>
+		</td>	
+			
+	</tr>
+	
+	<tr>
+		<td colspan="4"><div align="left"><p class="text4">Retrieval results with similar 3D surface</p></div></td>
+	</tr>
+
+		<!-- Render the Surface Retrieval Results -->
+<?php
+
+$query_result = `./$db_prog $query_id $volume_filtering_option $inv_dir`;
+$tmparray = preg_split("/\n/", $query_result);
+?>
+
+<tr>
+		<?php
+
+$count = 0;
+
+for ($i = 0; $i < count($tmparray) - 1; ++ $i) {
+
+	++ $count;
+	$resultarray = preg_split("/\t/", $tmparray[$i]);
+	$template_id = $resultarray[0];
+	$dist = $resultarray[1];
+	$template_name = $namehash["$template_id"];
+	$template_fullname = $fullnamehash["$template_id"];
+	$template_volume = $volumehash["$template_id"];
+	if (($query_volume > 0) && ($template_volume > 0)) {
+		$ratio_volume = $template_volume / $query_volume;
+		$ratio_volume = sprintf("%.3f", $ratio_volume);
+	} else {
+		$ratio_volume = "N/A";
+	}
+	$imghtmlink = "./search.php?q=" . $template_id . "&volumeFilter=" . $volume_filter . "&rep=" . $representation;
+?>
+	
+		
+		<td width="192">
+		<b>
+		<a
+			href='http://www.ebi.ac.uk/pdbe/entry/EMD-<?php echo "$template_id" ?>'
+			target="_blank" title='<?php echo "EMD-$template_id" ?>'>
+			<?php echo "EMD-$template_id" ?>
+		</a>
+		</b>
+		<br>
+		<?php if ($template_fullname != $template_name) { ?>
+		<a title='<?php echo "$template_fullname" ?>'> 
+		<?php } ?>
+		<font color="black"><?php echo "$template_name" ?></font>
+		<?php if ($template_fullname != $template_name) { ?>
+		</a>
+		<?php } ?>
+		<br>
+		<a class="imgLink" href='<?php echo "$imghtmlink" ?>'>
+		<img alt='<?php echo "$template_id" ?>' width="180" border="0" src='<?php echo "$img_dir/$template_id.gif" ?>' />
+		</a>
+		<br>
+		<font color="blue"><?php echo "EucD: $dist" ?></font>
+		<br>
+		<font color="blue"><?php echo "Ratio of volume: $ratio_volume" ?></font>
+		<br>		
+		</td>
+		
+		<?php
+
+
+	if (($count % 4 == 0) && $count != 20) {
+?>
+	</tr>
+	<tr>
+	<?php
+
+
+	} else
+		if ($count == 20) {
+?>
+</tr>
+<?php
+		}
+}
+?>
+	
+</table>
+
+<?php
+
+
+include ('../tailer.php');
+} // CLOSE normal visualization generation (coming from the error management part)
+?>

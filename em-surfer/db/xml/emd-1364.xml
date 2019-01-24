@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<emdEntry accessCode="1364" version="1.9.6">
+    <admin>
+        <lastUpdate>2016-06-29</lastUpdate>
+    </admin>
+    <deposition>
+        <status>REL</status>
+        <depositionDate>2007-05-21</depositionDate>
+        <depositionSite>PDBe</depositionSite>
+        <processingSite>PDBe</processingSite>
+        <headerReleaseDate>2007-05-24</headerReleaseDate>
+        <mapReleaseDate>2007-05-24</mapReleaseDate>
+        <title>Locking and unlocking of ribosomal motions.</title>
+        <authors>Mikel V, Andrey Z, Sengupta J, Rawat U, Ehrenberg M, Frank J</authors>
+        <keywords/>
+        <fittedPDBEntryIdList>
+            <fittedPDBEntryId>1pn6</fittedPDBEntryId>
+            <fittedPDBEntryId>1pn7</fittedPDBEntryId>
+            <fittedPDBEntryId>1pn8</fittedPDBEntryId>
+        </fittedPDBEntryIdList>
+        <primaryReference published="true">
+            <journalArticle>
+                <authors>Valle M, Zavialov A, Sengupta J, Rawat U, Ehrenberg M, Frank J</authors>
+                <articleTitle>Locking and unlocking of ribosomal motions.</articleTitle>
+                <journal>CELL(CAMBRIDGE,MASS.)</journal>
+                <volume>114</volume>
+                <firstPage>123</firstPage>
+                <lastPage>134</lastPage>
+                <year>2003</year>
+                <externalReference type="pubmed">12859903</externalReference>
+                <externalReference type="doi">doi:10.1016/S0092-8674(03)00476-8</externalReference>
+            </journalArticle>
+        </primaryReference>
+    </deposition>
+    <map>
+        <file format="CCP4" sizeKb="8584" type="map">emd_1364.map.gz</file>
+        <dataType>Image stored as Reals</dataType>
+        <dimensions>
+            <numColumns>130</numColumns>
+            <numRows>130</numRows>
+            <numSections>130</numSections>
+        </dimensions>
+        <origin>
+            <originCol>-65</originCol>
+            <originRow>-65</originRow>
+            <originSec>-65</originSec>
+        </origin>
+        <limit>
+            <limitCol>64</limitCol>
+            <limitRow>64</limitRow>
+            <limitSec>64</limitSec>
+        </limit>
+        <spacing>
+            <spacingCol>130</spacingCol>
+            <spacingRow>130</spacingRow>
+            <spacingSec>130</spacingSec>
+        </spacing>
+        <cell>
+            <cellA units="A">366.6</cellA>
+            <cellB units="A">366.6</cellB>
+            <cellC units="A">366.6</cellC>
+            <cellAlpha units="degrees">90</cellAlpha>
+            <cellBeta units="degrees">90</cellBeta>
+            <cellGamma units="degrees">90</cellGamma>
+        </cell>
+        <axisOrder>
+            <axisOrderFast>X</axisOrderFast>
+            <axisOrderMedium>Y</axisOrderMedium>
+            <axisOrderSlow>Z</axisOrderSlow>
+        </axisOrder>
+        <statistics>
+            <minimum>-78.5705</minimum>
+            <maximum>156.588</maximum>
+            <average>-0.00988095</average>
+            <std>3.62791</std>
+        </statistics>
+        <spaceGroupNumber>1</spaceGroupNumber>
+        <details>::::EMDATABANK.org::::EMD-1364::::</details>
+        <pixelSpacing>
+            <pixelX units="A">2.82</pixelX>
+            <pixelY units="A">2.82</pixelY>
+            <pixelZ units="A">2.82</pixelZ>
+        </pixelSpacing>
+        <contourLevel>9.07</contourLevel>
+        <annotationDetails>Cryo-EM map of E.coli 70S ribosome</annotationDetails>
+    </map>
+    <supplement>
+        <maskSet/>
+        <sliceSet/>
+        <figureSet/>
+        <fscSet/>
+    </supplement>
+    <sample>
+        <numComponents>1</numComponents>
+        <name>Release Complex, Puromycin, EF-G, GDPNP</name>
+        <sampleComponentList>
+            <sampleComponent componentID="1">
+                <entry>ligand</entry>
+                <sciName>EF-G</sciName>
+                <ligand>
+                    <sciSpeciesStrain>MRE600</sciSpeciesStrain>
+                    <sciSpeciesName ncbiTaxId="562">Escherichia coli</sciSpeciesName>
+                    <recombinantExpFlag>false</recombinantExpFlag>
+                    <externalReferences/>
+                    <natSource/>
+                    <engSource/>
+                </ligand>
+            </sampleComponent>
+        </sampleComponentList>
+    </sample>
+    <experiment>
+        <vitrification>
+            <cryogenName>ETHANE</cryogenName>
+            <details>Rapid-freezing in liquid ethane</details>
+            <instrument>NONE</instrument>
+        </vitrification>
+        <imaging>
+            <electronSource>FIELD EMISSION GUN</electronSource>
+            <imagingMode>BRIGHT FIELD</imagingMode>
+            <illuminationMode>FLOOD BEAM</illuminationMode>
+            <specimenHolder>cryo transfer</specimenHolder>
+            <detector>KODAK SO-163 FILM</detector>
+            <tiltAngleMin units="degrees">0</tiltAngleMin>
+            <tiltAngleMax units="degrees">0</tiltAngleMax>
+            <temperature units="Kelvin">93</temperature>
+            <microscope>FEI TECNAI F20</microscope>
+            <date>11-JUL-2003</date>
+            <electronBeamTiltParams>0</electronBeamTiltParams>
+            <specimenHolderModel>GATAN LIQUID NITROGEN</specimenHolderModel>
+            <acceleratingVoltage units="kV">200</acceleratingVoltage>
+        </imaging>
+        <imageAcquisition>
+            <scanner>ZEISS SCAI</scanner>
+            <samplingSize units="microns">14</samplingSize>
+        </imageAcquisition>
+        <fitting/>
+        <specimenPreparation>
+            <specimenState>particle</specimenState>
+        </specimenPreparation>
+    </experiment>
+    <processing>
+        <method>singleParticle</method>
+        <reconstruction>
+            <algorithm>Back projection</algorithm>
+            <software>SPIDER, package</software>
+            <ctfCorrection>CTF correctionn of 3D map</ctfCorrection>
+            <resolutionByAuthor>10.9</resolutionByAuthor>
+            <resolutionMethod>FSC 0.5</resolutionMethod>
+        </reconstruction>
+        <singleParticle>
+            <numProjections>1</numProjections>
+            <appliedSymmetry>C1</appliedSymmetry>
+        </singleParticle>
+    </processing>
+</emdEntry>
