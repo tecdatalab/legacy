@@ -1,0 +1,12 @@
+X-axis being the average of the overlap and Y-axis CC
+
+X-axis euclidean distance between centroids and Y-axis CC
+
+Try to find a third protein and compute things.
+
+Generate counts for pairs of patches that are closer than some threshold. Ideally we can differentiate pairs that are not interacting so if we can generate counts of things that have CC < 0.7
+
+In EM-data do:
+
+For each tx, ty, tz select the CC of the rotation that gives the best value and count the number of x,y,z that give us that.
+Then compare by eyes and see if it looks correct.

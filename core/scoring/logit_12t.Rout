@@ -1,0 +1,71 @@
+
+R version 2.10.1 (2009-12-14)
+Copyright (C) 2009 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> runReg	<-	function(data)	
++ {
++ 	data$hit	<-	(data$rmsd<=2.5)*1;
++ 	mod		<-	glm(hit~v1+v2+v3+v4+v5+v6+v7+v8+v9+v10+v11+v12+id,family="binomial",data);
++ 	smod	<-	step(mod,trace=F);
++ 	kk		<-	rep(0,12);
++ 
++ 	cf		<-	coefficients(smod);
++ 	cf		<-	cf[names(cf) %in% vnames];
++ 	kk[vnames[2:13] %in% names(cf)]	<-	-cf*1000;
++ 
++ 	print(kk);
++ 
++ }
+> 
+> vnames	<-	c('id',paste("v",1:12,sep=""),'rmsd');
+> 
+> out	<-	NULL;
+> 
+> data	<-	read.table('soro_zdockbm2_pdbh_smalldat.dat',sep=",",header=F);
+> names(data)	<-	vnames;
+> out	<-	rbind(out,runReg(data));
+ [1]  45.74237166 121.45284433   0.09670708  -1.65713456  17.40425339
+ [6]  -0.06381187  18.98507286  -0.80646719 -41.23422862   0.00000000
+[11]  34.83840006  59.42548087
+There were 23 warnings (use warnings() to see them)
+> 
+> data	<-	subset(data,rmsd<=9);
+> cf		<-	runReg(data);
+ [1]  53.28683745 152.08185083   0.15067189   1.37557213  13.22508301
+ [6]  -0.09657654  15.81230916  -0.73019043 -22.46735846   0.00000000
+[11]  27.91323885  79.02858689
+There were 23 warnings (use warnings() to see them)
+> out	<-	rbind(out,runReg(data));
+ [1]  53.28683745 152.08185083   0.15067189   1.37557213  13.22508301
+ [6]  -0.09657654  15.81230916  -0.73019043 -22.46735846   0.00000000
+[11]  27.91323885  79.02858689
+There were 23 warnings (use warnings() to see them)
+> 
+> data	<-	read.table('soro_zdbm2_c2h_sm.dat',sep=",",header=F);
+> names(data)	<-	vnames;
+> out	<-	rbind(out,runReg(data));
+ [1]  47.65228429 109.24128693   0.10949410   1.40510739  11.17686480
+ [6]  -0.03045626  12.47638208  -0.74122855 -34.26830474   0.00000000
+[11]   0.00000000  68.57258489
+> 
+> row.names(out)	<-	c('sm','sm_c2h','c2h_sm');
+> write.table(as.data.frame(out),file='logit12.weights',sep=" ",row.names=T,col.names=F);
+> 
+> proc.time()
+   user  system elapsed 
+736.122  38.730 775.596 

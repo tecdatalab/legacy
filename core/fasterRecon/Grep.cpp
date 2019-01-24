@@ -1,0 +1,27 @@
+#include "Grep.h"
+
+int npats =  178 ;
+char* respat[] = {"^.*$","^.*$","^WAT|HOH|H2O|DOD|DIS$","^CA$","^CD$","^.*$","^ACE$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^ALA$", "^ILE|THR|VAL$", "^.*$", "^ASN|ASP|ASX|HIS|HIP|HIE|HID|HISN|HISL|LEU|PHE|TRP|TYR$", "^ARG|GLU|GLN|GLX|MET$", "^LEU$", "^.*$", "^GLN$", "^GLN$", "^ACE$", "^ARG$", "^ARG$", "^ARG$", "^ARG$", "^ARG$", "^ARG$", "^ASN$", "^ASN$", "^ASN$", "^ASN$", "^ASP$", "^ASP$", "^ASX$", "^ASX$", "^ASX$", "^ASX$", "^ASX$", "^CYS|MET$", "^CY[SXM]$", "^CYH$", "^GLU$", "^GLU$", "^GLU|GLN|GLX$", "^GLN$", "^GLN$", "^GLN|GLX$", "^HIS|HID|HIE|HIP|HISL$", "^HIS|HIE|HISL$", "^HID|HIP$", "^HID|HIP$", "^HIS|HIE|HIP$", "^HIS|HIE|HIP$", "^HID|HISL$", "^HID|HISL$", "^HIS|HID|HIP|HISD$", "^ILE$", "^ILE$", "^ILE$", "^LEU$", "^LEU$", "^LYS$", "^LYS$", "^LYS$", "^MET$", "^MET$", "^PHE$", "^PHE$", "^PRO|CPR$", "^CSO$", "^CSO$", "^CSO$", "^CSO$", "^SER$", "^THR$", "^THR$", "^TRP$", "^TRP$", "^TRP$", "^TRP$", "^TRP$", "^TRP$", "^TRP$", "^TRP$", "^TYR$", "^TYR$", "^TYR$", "^VAL$", "^VAL$", "^.*$", "^.*$", "^FS[34]$", "^FS[34]$", "^FS3$", "^FEO$", "^FEO$", "^HEM$", "^HEM$", "^HEM$", "^HEM$", "^HEM$", "^HEM$", "^HEM$", "^HEM$", "^HEM$", "^HEM$", "^HEM$", "^HEM$", "^HEM$", "^AZI$", "^MPD$", "^MPD$", "^MPD$", "^MPD$", "^MPD$", "^MPD$", "^MPD$", "^MPD$", "^SO4|SUL$", "^SO4|SUL$", "^PO4|PHO$", "^PC$", "^PC$", "^PC$", "^PC$", "^PC$", "^PC$", "^BIG$", "^POI$", "^DOT$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^FMN$", "^ALK|MYR$", "^ALK|MYR$", "^ALK$", "^MYR$", "^ALK|MYR$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^.*$", "^FAD|NAD|AMX|APU$", "^FAD|NAD|AMX|APU$", "^FAD|NAD|AMX|APU$", "^FAD|NAD|AMX|APU$", "^FAD|NAD|AMX|APU$" }; char* atmpat[] = {  "^[0-9]*H.*$", "^[0-9]*D.*$", "^O.*$", "^CA$", "^CD$", "^CD  $", "^CA$", "^N$", "^CA$", "^C$", "^O$", "^P$", "^CB$", "^CB$", "^CB$", "^CG$", "^CG$", "^CG$", "^CG$", "^O1$", "^O2$", "^CH3$", "^CD$", "^NE$", "^RE$", "^CZ$", "^NH[12][AB]?$", "^RH[12][AB]?$", "^OD1$", "^ND2$", "^AD1$", "^AD2$", "^OD[12][AB]?$", "^ED[12][AB]?$", "^OD1[AB]?$", "^ND2$", "^AD1$", "^AD2$", "^OD2$", "^LP[12]$", "^SG$", "^SG$", "^OE[12][AB]?$", "^EE[12][AB]?$", "^CD$", "^OE1$", "^NE2$", "^AE[12]$", "^CE1|CD2$", "^ND1$", "^ND1$", "^RD1$", "^NE2$", "^RE2$", "^NE2$", "^RE2$", "^A[DE][12]$", "^CG1$", "^CG2$", "^CD|CD1$", "^CD1$", "^CD2$", "^C[GDE]$", "^NZ$", "^KZ$", "^SD$", "^CE$", "^C[DE][12]$", "^CZ$", "^C[GD]$", "^SE$", "^SEG$", "^OD1$", "^OD2$", "^OG$", "^OG1$", "^CG2$", "^CD1$", "^CD2$", "^CE2$", "^NE1$", "^CE3$", "^CZ2$", "^CZ3$", "^CH2$", "^C[DE][12]$", "^CZ$", "^OH$", "^CG1$", "^CG2$", "^CD$", "^CE$", "^FE[1-7]$", "^S[1-7]$", "^OXO$", "^FE1$", "^FE2$", "^O1$", "^O2$", "^FE$", "^CH[A-D]$", "^N[A-D]$", "^N [A-D]$", "^C[1-4][A-D]$", "^CM[A-D]$", "^C[AB][AD]$", "^CG[AD]$", "^O[12][AD]$", "^C[AB][BC]$", "^OH2$", "^N[123]$", "^C1$", "^C2$", "^C3$", "^C4$", "^C5$", "^C6$", "^O7$", "^O8$", "^S$", "^O[1234]$", "^O[1234]$", "^O4$", "^P1$", "^O[123]$", "^C[12]$", "^N1$", "^C[345]$", "^BAL$", "^POI$", "^DOT$", "^CU$", "^ZN$", "^MN$", "^FE$", "^MG$", "^MN$", "^CO$", "^SE$", "^YB$", "^N1$", "^C[2478]$", "^O2$", "^N3$", "^O4$", "^C[459]A$", "^N5$", "^C[69]$", "^C[78]M$", "^N10$", "^C10$", "^C[12345]\*$", "^O[234]\*$", "^O5\*$", "^OP[1-3]$", "^OT1$", "^C01$", "^C16$", "^C14$", "^C.*$", "^SEG$", "^OXT$", "^OT.*$", "^E.*$", "^S.*$", "^C.*$", "^A.*$", "^O.*$", "^N.*$", "^R.*$", "^K.*$", "^P[A-D]$", "^P.*$", "^.O.*$", "^.N.*$", "^.C.*$", "^.P.*$", "^.H.*$" }; int atmnum[] = {  15 , 15 , 2 , 18 , 22 , 22 , 9 , 4 , 7 , 10 , 1 , 13 , 9 , 7 , 8 , 10 , 8 , 7 , 8 , 3 , 3 , 9 , 8 , 4 , 4 , 10 , 5 , 5 , 1 , 5 , 3 , 3 , 3 , 3 , 1 , 5 , 3 , 3 , 3 , 13 , 13 , 12 , 3 , 3 , 10 , 1 , 5 , 3 , 11 , 14 , 4 , 4 , 4 , 4 , 14 , 14 , 4 , 8 , 9 , 9 , 9 , 9 , 8 , 6 , 6 , 13 , 9 , 11 , 11 , 8 , 9 , 9 , 3 , 3 , 2 , 2 , 9 , 11 , 10 , 10 , 4 , 11 , 11 , 11 , 11 , 11 , 10 , 2 , 9 , 9 , 8 , 8 , 21 , 13 , 1 , 21 , 21 , 1 , 1 , 21 , 11 , 14 , 14 , 10 , 9 , 8 , 10 , 3 , 11 , 2 , 14 , 9 , 10 , 8 , 7 , 9 , 9 , 2 , 2 , 13 , 3 , 3 , 3 , 13 , 3 , 8 , 14 , 9 , 17 , 23 , 23 , 20 , 19 , 24 , 25 , 26 , 27 , 28 , 29 , 31 , 4 , 10 , 1 , 14 , 1 , 10 , 4 , 11 , 9 , 4 , 10 , 8 , 2 , 3 , 3 , 3 , 10 , 9 , 9 , 8 , 9 , 3 , 3 , 3 , 13 , 7 , 11 , 1 , 4 , 4 , 6 , 13 , 13 , 1 , 4 , 7 , 13 , 15  };  float united_rad[] = { 1.40 , 1.60 , 1.40 , 1.70 , 1.80 , 2.00 , 2.00 , 2.00 , 2.00 , 1.74 , 1.86 , 1.85 , 1.80 , 1.54 , 1.20 , 1.50 , 5.00 , 1.97 , 1.40 , 1.40 , 1.30 , 1.49 , 0.01 , 0.00 , 1.24 , 1.60 , 1.24 , 1.25 , 2.15 , 3.00 , 1.15 , };  char *CGrep_errors[] = {     "Invalid argument",     "Insufficient expression",     "Parse overload",     "Mismatched () or []",     "Extraneous characters",     "Illegal use of * or +",     "Illegal nesting",     "Illegal [] range",     "Illegal ?, +, or * usage",     "Illegal backslashes",     NULL};
+float get_radius(char* resname, char* aname) {
+
+	int pat, h_select=5;	// 4 for water
+	CGrep grep;
+
+	if (grep.match("^[ 0-9][HhDd]$", aname))
+		aname = "H";
+
+	if (grep.match("^[Hh][^Gg]$", aname))
+		aname = "H";
+
+	for(pat=0;pat<npats;pat++) {
+		if (grep.match(atmpat[pat], aname) &&
+			grep.match(respat[pat], resname))
+		break;
+	}
+	if(pat==npats) {
+		for(pat=0;pat<npats;pat++) {
+			if (grep.match(atmpat[pat], aname)) break;
+		} if(pat==npats) return -1;
+	}
+	return united_rad[atmnum[pat]-1];
+}

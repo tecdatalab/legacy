@@ -1,0 +1,56 @@
+
+R version 2.10.1 (2009-12-14)
+Copyright (C) 2009 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> runReg	<-	function(dat)	
++ {
++ 	dat$hit	<-	(dat$rmsd<=2.5)*1;
++ 	mod		<-	lm(rmsd~v2+v3+v5+v6+v7+v8+v9+v11+v12+id,dat);
++ 	smod	<-	step(mod,trace=F);
++ 	kk		<-	rep(0,12);
++ 
++ 	cf		<-	coefficients(smod);
++ 	cf		<-	cf[names(cf) %in% vnames];
++ 	kk[vnames[2:13] %in% names(cf)]	<-	cf*1000;
++ 
++ 	print(kk);
++ 
++ }
+> 
+> vnames	<-	c('id',paste("v",1:12,sep=""),'rmsd');
+> 
+> out			<-	NULL;
+> data		<-	read.table('soro_zdbm2_sm_200.dat',sep=",",header=F);
+> names(data)	<-	vnames;
+> out			<-	rbind(out,runReg(data));
+ [1]   0.00000000 186.35083018   0.34677014   0.00000000  19.42908874
+ [6]  -0.02804566  22.51485717  -3.15848786 -95.82976973   0.00000000
+[11]  57.23364760  70.39504857
+> 
+> data		<-	read.table('soro_zdbm2_c2hsm_200.dat',sep=",",header=F);
+> names(data)	<-	vnames;
+> out			<-	rbind(out,runReg(data));
+ [1]  0.00000000 73.76744672  0.19222416  0.00000000 10.41869237 -0.02347243
+ [7] 11.94511806 -0.54286698  0.00000000  0.00000000 27.78439279 42.16498799
+> 
+> row.names(out)	<-	c('lin_sm','lin_c2hsm');
+> write.table(as.data.frame(out),file='lin_n9.weights',sep=" ",row.names=T,col.names=F,quote=F);
+> 
+> proc.time()
+   user  system elapsed 
+ 14.060   2.652  16.845 
