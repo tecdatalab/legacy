@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/bio/kihara-web/www/db/complexdistance/idlistdistance.pl falseidlist10 singlechaincomplexidlist10
